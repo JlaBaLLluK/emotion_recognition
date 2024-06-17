@@ -53,9 +53,9 @@ def main():
     output = Dense(7, activation='softmax')(x)
     model = Model(inputs=inputs, outputs=output)
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    model.load_weights('model.weights.h5')
-    # model.fit(datagen.flow(train_images_pixels, train_emotions, batch_size=128), epochs=10, validation_data=None)
-    # model.save_weights('model.weights.h5')
+    # model.fit(datagen.flow(train_images_pixels, train_emotions, batch_size=64), epochs=15, validation_data=None)
+    # model.save_weights('model64_15.weights.h5')
+    model.load_weights('model64_15.weights.h5')
     predictions = model.predict(test_images_pixels)
     predicted_classes = np.argmax(predictions, axis=1)
     for i in range(100):
