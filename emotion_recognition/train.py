@@ -39,7 +39,7 @@ def main():
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     model.fit(datagen.flow(train_images_pixels, train_emotions, batch_size=64), epochs=15, validation_data=None)
     # model.save_weights('model64_15.weights.h5')
-    model.save('model.keras')
+    model.save('../model.keras')
 
 
 if __name__ == '__main__':
