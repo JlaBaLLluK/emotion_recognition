@@ -1,0 +1,58 @@
+body {
+    background-color: #F0F0F0;
+}
+
+header {
+    background-color: #303B44;
+    height: 50px;
+    color: #F0F0F0;
+    position: fixed;
+    width: 100%;
+}
+
+header h2 {
+    display: inline;
+    padding-left: 2%;
+    width: 71%;
+}
+
+header .login {
+    display: inline;
+    padding-left: 71%;
+}
+
+header .signup {
+    display: inline;
+    padding-left: 1%;
+}
+
+header .profile {
+    display: inline;
+    padding-left: 70%;
+}
+
+header form {
+    display: inline;
+}
+
+header form button.logout-button {
+    border: solid 0px black;
+    background-color: #303B44;
+    color: #F0F0F0;
+    padding-left: 1%;
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+header a {
+    color: #F0F0F0;
+    text-decoration: none;
+}
+
+header a:hover, header form button:hover {
+    color: #87CEEB;
+}
+
+header a.homepage-link:hover {
+    color: #F0F0F0;
+}
