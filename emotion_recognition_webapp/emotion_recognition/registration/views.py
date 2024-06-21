@@ -17,4 +17,4 @@ class RegistrationView(View):
             return render(request, self.template_name, {'form': form})
 
         form.save()
-        return redirect('homepage')
+        return redirect('authorization')

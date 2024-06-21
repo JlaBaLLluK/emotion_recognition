@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_links %}
+<link rel="stylesheet" href="{% static 'user_profile/css/deleted_successfully_styles.css' %}">
+{% endblock %}
+{% block title %}
+{{ user }}
+{% endblock %}
+{% block content %}
+<h2>Your account was deleted successfully!</h2>
+{% endblock %}

@@ -16,6 +16,9 @@ class RegistrationForm(ModelForm):
                 'unique': 'This username is already taken!',
             },
         }
+        widgets = {
+            'password': PasswordInput(attrs={'class': 'password-input'}),
+        }
 
     def clean(self):
         super().clean()
