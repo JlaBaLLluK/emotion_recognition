@@ -22,7 +22,7 @@
     </h2>
     {% if user.is_authenticated %}
     <h4 class="profile">
-        <a href="" class="profile-link">
+        <a href="{% url 'user_profile' %}" class="profile-link">
             Profile
         </a>
     </h4>
