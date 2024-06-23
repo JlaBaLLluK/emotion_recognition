@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'auth_user',
     'registration',
     'authorization',
-    'user_profile'
+    'user_profile',
+    'prediction'
 ]
 
 MIDDLEWARE = [

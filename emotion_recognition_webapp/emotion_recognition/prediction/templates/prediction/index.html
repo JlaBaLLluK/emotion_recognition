@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_links %}
+<link rel="stylesheet" href="{% static 'prediction/css/index_styles.css' %}">
+{% endblock %}
+{% block title %}
+Emotion Recognition
+{% endblock %}
+{% block content %}
+<h1>Upload CSV File</h1>
+    <form method="post" enctype="multipart/form-data" class="upload-file-form">
+        {% csrf_token %}
+        <label class="input-label" for="file-upload">Choose file </label>{{ form.file }} <br>
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+{% endblock %}

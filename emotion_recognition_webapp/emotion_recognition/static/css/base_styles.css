@@ -8,6 +8,7 @@ header {
     color: #F0F0F0;
     position: fixed;
     width: 100%;
+    transition: color 20s ease;
 }
 
 header h2 {
@@ -42,11 +43,13 @@ header form button.logout-button {
     padding-left: 1%;
     font-size: 1.5em;
     font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 header a {
     color: #F0F0F0;
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 header a:hover, header form button:hover {
