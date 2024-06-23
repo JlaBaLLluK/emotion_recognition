@@ -21,11 +21,11 @@ class RegistrationForm(ModelForm):
         }
 
     def clean(self):
-        super().clean()
-        if self.cleaned_data.get('password') != self.cleaned_data.get('password_confirm'):
+        cleaned_data = super().clean()
+        if cleaned_data.get('password') != cleaned_data.get('password_confirm'):
             raise ValidationError({'password_confirm': ValidationError("Passwords must be same!")})
 
-        return self.cleaned_data
+        return cleaned_data
 
     def save(self, commit=True):
         user_model.objects.create_user(username=self.cleaned_data.get('username'),
