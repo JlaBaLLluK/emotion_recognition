@@ -10,9 +10,9 @@ Log In
 <h1 class="authorization">Authorization</h1>
 <form method="post" class="login-form">
     {% for field in form %}
-        {% for error in field.errors %}
-            <label class="error">{{ error }}</label><br>
-        {% endfor %}
+    {% for error in field.errors %}
+    <label class="error">{{ error }}</label><br>
+    {% endfor %}
     {% endfor %}
     <label class="username">Username:</label> {{ form.username }}<br>
     <label class="password">Password:</label> {{ form.password }}<br>

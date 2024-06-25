@@ -20,6 +20,7 @@ form label.input-label {
 
 form label.input-label:hover {
     background-color: gray;
+    color: #F0F0F0;
 }
 
 .upload-file-form button {
@@ -32,4 +33,10 @@ form label.input-label:hover {
     display: none;
 }
 
-
+.error {
+    width: 100%;
+    color: red;
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+}

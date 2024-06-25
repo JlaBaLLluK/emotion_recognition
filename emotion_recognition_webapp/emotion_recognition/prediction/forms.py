@@ -1,10 +1,27 @@
-from django.core.validators import FileExtensionValidator
-from django.forms import Form, FileField, FileInput
+from django.core.exceptions import ValidationError
+from django.forms import FileInput, ModelForm
+
+from prediction.models import Prediction
+from pandas import read_csv
 
 
-class ChooseFileForm(Form):
-    file = FileField(required=True, validators=[FileExtensionValidator(['csv', ])], widget=FileInput(attrs={
-        'class': 'file-upload',
-        'id': 'file-upload'
-    }))
+class ChooseFileForm(ModelForm):
+    class Meta:
+        model = Prediction
+        fields = '__all__'
+        widgets = {
+            'file': FileInput(attrs={'class': 'file-upload',
+                                     'id': 'file-upload', }),
+        }
 
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        data = read_csv(file)
+        if 'pixels' not in data.columns:
+            raise ValidationError('CSV file must contain "pixels" column.')
+
+        for record in data.get('pixels'):
+            if len(record.split()) != 48 * 48:
+                raise ValidationError('Every record must contain 48*48 grayscale pixels, separated by spaces.')
+
+        return file
