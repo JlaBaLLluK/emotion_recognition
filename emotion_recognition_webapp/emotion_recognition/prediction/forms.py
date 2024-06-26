@@ -8,14 +8,14 @@ from pandas import read_csv
 class ChooseFileForm(ModelForm):
     class Meta:
         model = Prediction
-        fields = '__all__'
+        fields = ['source_file', ]
         widgets = {
-            'file': FileInput(attrs={'class': 'file-upload',
-                                     'id': 'file-upload', }),
+            'source_file': FileInput(attrs={'class': 'file-upload',
+                                            'id': 'file-upload', }),
         }
 
-    def clean_file(self):
-        file = self.cleaned_data.get('file')
+    def clean_source_file(self):
+        file = self.cleaned_data.get('source_file')
         data = read_csv(file)
         if 'pixels' not in data.columns:
             raise ValidationError('CSV file must contain "pixels" column.')

@@ -1,0 +1,24 @@
+h1 {
+    padding-top: 3%;
+    padding-left: 1%;
+}
+
+label {
+    font-size: 22px;
+    padding-left: 1%;
+    margin-top: -1%;
+}
+
+.download-button {
+    background-color: #303B44;
+    margin-left: 1%;
+    border: none;
+    border-radius: 10px;
+    height: 30px;
+}
+
+.download-button a {
+    text-decoration: none;
+    color: #F0F0F0;
+    font-size: 18px;
+}
