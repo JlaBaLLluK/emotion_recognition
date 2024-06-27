@@ -38,3 +38,13 @@ class DeleteProfileView(View):
         user = request.user
         user.delete()
         return redirect('deleted-successfully')
+
+
+class PredictionHistoryView(View):
+    template_name = 'user_profile/prediction_history.html'
+
+    def get(self, request):
+        predictions = request.user.predictions.all()
+        return render(request, self.template_name, {
+            'predictions': predictions
+        })

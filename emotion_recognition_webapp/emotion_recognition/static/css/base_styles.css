@@ -8,7 +8,6 @@ header {
     color: #F0F0F0;
     position: fixed;
     width: 100%;
-    transition: color 20s ease;
 }
 
 header h2 {

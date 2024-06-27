@@ -65,8 +65,10 @@ class PredictEmotionsView(View):
         prediction = Prediction.objects.get(pk=pk)
         if prediction.result_file == '':
             predicted_classes = predict_emotions(prediction)
+            prediction.user = request.user
             request.user.operations_done += 1
             request.user.save()
+            prediction.save()
         else:
             data = read_csv(prediction.result_file)
             predicted_classes = data['emotion']
