@@ -5,9 +5,12 @@ from keras.src.saving import load_model
 from pandas import read_csv, DataFrame
 import numpy as np
 import os
+import logging
 
 from prediction.forms import ChooseFileForm
 from prediction.models import Prediction
+
+logger = logging.getLogger('app')
 
 
 class ChooseFileView(View):
@@ -18,13 +21,16 @@ class ChooseFileView(View):
 
     def post(self, request):
         if not request.user.is_authenticated:
+            logger.error("User isn't authenticated")
             return redirect('authorization')
 
         form = ChooseFileForm(request.POST, request.FILES)
         if not form.is_valid():
+            logger.error(f"User {request.user.pk} uploaded wrong file.")
             return render(request, self.template_name, {'form': form})
 
         prediction = form.save()
+        logger.info(f"User {request.user.pk} uploaded correct file.")
         return redirect('predict_emotions', prediction.id)
 
 
@@ -69,9 +75,11 @@ class PredictEmotionsView(View):
             request.user.operations_done += 1
             request.user.save()
             prediction.save()
+            logger.info(f"Prediction for user {request.user.pk} done.")
         else:
             data = read_csv(prediction.result_file)
             predicted_classes = data['emotion']
+            logger.info(f"Prediction for user {request.user.pk} was done earlier.")
 
         predicted_classes = [self.emotions_labels[predicted_class] for predicted_class in predicted_classes]
         return render(request, self.template_name, {
@@ -84,4 +92,5 @@ class DownloadPredictionView(View):
 
     @staticmethod
     def get(request, pk):
+        logger.info(f"User {request.user.pk} downloaded prediction {pk}")
         return FileResponse(Prediction.objects.get(pk=pk).result_file, as_attachment=True)

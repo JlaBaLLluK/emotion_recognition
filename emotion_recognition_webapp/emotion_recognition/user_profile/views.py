@@ -1,7 +1,11 @@
+import logging
+
 from django.shortcuts import render, redirect
 from django.views import View
 
 from user_profile.forms import EditProfileDataForm, DeleteProfileForm
+
+logger = logging.getLogger('app')
 
 
 class EditProfileDataView(View):
@@ -18,9 +22,11 @@ class EditProfileDataView(View):
     def post(self, request):
         form = EditProfileDataForm(request.POST, instance=request.user)
         if not form.is_valid():
+            logger.error(f"User {request.user.pk} couldn't change account data.")
             return render(request, self.template_name, {'form': form})
 
         form.save()
+        logger.info(f"User {request.user.pk} changed account data.")
         return redirect('user_profile')
 
 
@@ -33,9 +39,11 @@ class DeleteProfileView(View):
     def post(self, request):
         form = DeleteProfileForm(request.POST, user=request.user)
         if not form.is_valid():
+            logger.error(f"User {request.user.pk} couldn't delete account.")
             return render(request, self.template_name, {'form': form})
 
         user = request.user
+        logger.info(f"User {request.user.pk} deleted account.")
         user.delete()
         return redirect('deleted-successfully')
 
@@ -45,6 +53,7 @@ class PredictionHistoryView(View):
 
     def get(self, request):
         predictions = request.user.predictions.all()
+        logger.info(f"User {request.user.pk} checked predictions history.")
         return render(request, self.template_name, {
             'predictions': predictions
         })
