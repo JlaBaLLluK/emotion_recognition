@@ -7,9 +7,8 @@
 Emotion Recognition
 {% endblock %}
 {% block content %}
-<h1>Predictions</h1>
-{% for emotion in emotions %}
-<label>Image {{ forloop.counter }}: {{ emotion }}.</label><br>
-{% endfor %}
-<button class="download-button"><a href="{% url 'download_prediction' pk=prediction_pk %}">Download</a></button>
+<h1>Prediction</h1>
+<img src="{{ prediction.source_file.url }}"><br>
+<label>{{ prediction.result }}</label>
+
 {% endblock %}

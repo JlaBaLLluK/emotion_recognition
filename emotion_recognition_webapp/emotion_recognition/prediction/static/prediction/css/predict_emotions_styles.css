@@ -31,3 +31,9 @@ label {
     color: #F0F0F0;
     font-size: 20px;
 }
+
+img {
+    margin-left: 1%;
+    width: 10%;
+    height: 10%;
+}

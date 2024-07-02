@@ -2,10 +2,9 @@ from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from keras.src.saving import load_model
-from pandas import read_csv, DataFrame
 import numpy as np
-import os
 import logging
+import cv2
 
 from prediction.forms import ChooseFileForm
 from prediction.models import Prediction
@@ -24,7 +23,7 @@ class ChooseFileView(View):
             logger.error("User isn't authenticated")
             return redirect('authorization')
 
-        form = ChooseFileForm(request.POST, request.FILES)
+        form = ChooseFileForm(data=request.POST, files=request.FILES)
         if not form.is_valid():
             logger.error(f"User {request.user.pk} uploaded wrong file.")
             return render(request, self.template_name, {'form': form})
@@ -34,24 +33,21 @@ class ChooseFileView(View):
         return redirect('predict_emotions', prediction.id)
 
 
-def predict_emotions(prediction):
-    data = read_csv(prediction.source_file)
-    images_pixels = np.array(data['pixels'].apply(
-        lambda image_pixels: np.fromstring(image_pixels, sep=' ').reshape(48, 48, 1)).tolist())
-    images_pixels = np.repeat(images_pixels, 3, axis=-1)
+def predict_emotion(prediction):
+    img = cv2.imread(prediction.source_file.path, cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        print("Error while load image!")
+        return
+
+    if img.shape[0] != 48 or img.shape[1] != 48:
+        img = cv2.resize(img, (48, 48))
+
+    img = img.astype('float32')
+    img = np.repeat(img[..., np.newaxis], 3, axis=-1)
+    img = np.expand_dims(img, axis=0)
     model = load_model('model.keras')
-    predictions = model.predict(images_pixels)
+    predictions = model.predict(img)
     predicted_classes = np.argmax(predictions, axis=1)
-    result_data = DataFrame({
-        'emotion': predicted_classes,
-        'pixels': data['pixels']
-    })
-    result_file_name = 'result_' + prediction.source_file.name.split('/')[-1]
-    result_path = f'results/{result_file_name}'
-    prediction.result_file.name = result_path
-    prediction.save()
-    os.makedirs('results', exist_ok=True)
-    result_data.to_csv(result_path, index=False)
     return predicted_classes
 
 
@@ -69,28 +65,17 @@ class PredictEmotionsView(View):
 
     def get(self, request, pk):
         prediction = Prediction.objects.get(pk=pk)
-        if prediction.result_file == '':
-            predicted_classes = predict_emotions(prediction)
-            prediction.user = request.user
+        if prediction.result == '':
+            predicted_classes = predict_emotion(prediction)
+            predicted_class = self.emotions_labels[predicted_classes[0]]
             request.user.operations_done += 1
             request.user.save()
+            prediction.result = predicted_class
+            prediction.user = request.user
             prediction.save()
-            logger.info(f"Prediction for user {request.user.pk} done.")
+            logger.info(f"Done prediction for user {request.user}")
         else:
-            data = read_csv(prediction.result_file)
-            predicted_classes = data['emotion']
-            logger.info(f"Prediction for user {request.user.pk} was done earlier.")
-
-        predicted_classes = [self.emotions_labels[predicted_class] for predicted_class in predicted_classes]
+            logger.info(f"Prediction for user {request.user} was already done")
         return render(request, self.template_name, {
-            'emotions': predicted_classes,
-            'prediction_pk': pk
+            'prediction': prediction,
         })
-
-
-class DownloadPredictionView(View):
-
-    @staticmethod
-    def get(request, pk):
-        logger.info(f"User {request.user.pk} downloaded prediction {pk}")
-        return FileResponse(Prediction.objects.get(pk=pk).result_file, as_attachment=True)
