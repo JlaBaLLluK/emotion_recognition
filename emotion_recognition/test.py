@@ -15,16 +15,6 @@ emotions_labels = {
 }
 
 
-def load_test_data(path):
-    data = pd.read_csv(path)
-    pixels = data['pixels'].apply(lambda image_pixels: np.fromstring(image_pixels, sep=' ').reshape(48, 48, 1))
-    emotions = data['emotion']
-    pixels = np.array(pixels.tolist())
-    for i in range(100):
-        cv2.imwrite(f'image_{i}.png', pixels[i])
-    # return np.array(pixels.tolist()), np.array(emotions.to_list())
-
-
 def load_image(path):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     if img is None:
